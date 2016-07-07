@@ -28,6 +28,9 @@ Fs = require 'fs'
 Path = require 'path'
 Cheerio = require 'cheerio'
 Entities = require 'entities'
+FuzzyMatching = require 'fuzzy-matching'
+
+FUZZY_MIN_MATCH = 0.8
 
 class ScoreKeeper
   constructor: (@robot) ->
@@ -54,7 +57,7 @@ class ScoreKeeper
     @cache.scores[user] += value
     @saveUser(user)
 
-  scoreForUser: (user) -> 
+  scoreForUser: (user) ->
     user = @getUser(user)
     @cache.scores[user]
 
@@ -114,8 +117,11 @@ class Game
       checkGuess = checkGuess.replace /[\\'"\.,-\/#!$%\^&\*;:{}=\-_`~()\s]/g, ""
       checkAnswer = @currentQ.validAnswer.toLowerCase().replace /[\\'"\.,-\/#!$%\^&\*;:{}=\-_`~()\s]/g, ""
       checkAnswer = checkAnswer.replace /^(a(n?)|the)/g, ""
+      fm = new FuzzyMatching([checkAnswer])
+      indexOfCheck = checkGuess.indexOf(checkAnswer) >= 0
+      fuzzyMatchCheck = fm.get(checkGuess, {"min": FUZZY_MIN_MATCH})
 
-      if checkGuess.indexOf(checkAnswer) >= 0
+      if indexOfCheck or fuzzyMatchCheck
         name = resp.envelope.user.name.toLowerCase().trim()
         value = @currentQ.value.replace /[^0-9.-]+/g, ""
         value = parseInt value
@@ -129,7 +135,11 @@ class Game
         else
             adjustedValue = value
 
+        if fuzzyMatchCheck
+            resp.reply "Fuzzy Match found"
+
         resp.reply "YOU ARE CORRECT!!! The answer is #{@currentQ.answer}, you scored #{adjustedValue} points."
+
         @robot.logger.debug "#{name} answered correctly."
         if adjustedValue != value
             resp.send "Hints Used = #{@hintLength-1}, original points = #{value}, adjusted points = #{adjustedValue}"
@@ -152,7 +162,7 @@ class Game
 
       # Check if the hintLength is greater than answerLength/2
       if @hintLength > answer.length/2
-        resp.send "You have run out of hints for the active question" 
+        resp.send "You have run out of hints for the active question"
         return
 
       hint = answer.substr(0,@hintLength) + answer.substr(@hintLength,(answer.length + @hintLength)).replace(/./g, ".")
@@ -162,7 +172,7 @@ class Game
 
       resp.send "Hint = #{hint}"
     else
-      resp.send "There is no active question!"    
+      resp.send "There is no active question!"
 
   checkScore: (resp, name) ->
     name = name.toLowerCase().trim()

@@ -24,7 +24,8 @@
   "dependencies": {
     "coffee-script": "~1.6",
     "cheerio": "0.17.0",
-    "entities": "1.1.1"
+    "entities": "1.1.1",
+    "fuzzy-matching": "0.4.3"
   },
 
   "devDependencies": {

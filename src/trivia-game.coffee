@@ -136,9 +136,8 @@ class Game
             adjustedValue = value
 
         if fuzzyMatchCheck.value? and not indexOfCheck
-            fuzzyMatchInfo = "Fuzzy Match found, fuzzy_min_match = #{FUZZY_MIN_MATCH}, distance = #{fuzzyMatchCheck.distance}, value = #{fuzzyMatchCheck.value}"
-            resp.reply fuzzyMatchInfo
-            @robot.logger.info fuzzyMatchInfo
+            resp.reply "Fuzzy Match found"
+            @robot.logger.info "Fuzzy Match found, fuzzy_min_match = #{FUZZY_MIN_MATCH}, distance = #{fuzzyMatchCheck.distance}, value = #{fuzzyMatchCheck.value}"
 
         resp.reply "YOU ARE CORRECT!!! The answer is #{@currentQ.answer}, you scored #{adjustedValue} points."
 

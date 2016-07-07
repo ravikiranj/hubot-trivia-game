@@ -121,7 +121,7 @@ class Game
       indexOfCheck = checkGuess.indexOf(checkAnswer) >= 0
       fuzzyMatchCheck = fm.get(checkGuess, {"min": FUZZY_MIN_MATCH})
 
-      if indexOfCheck or fuzzyMatchCheck
+      if indexOfCheck or fuzzyMatchCheck.value?
         name = resp.envelope.user.name.toLowerCase().trim()
         value = @currentQ.value.replace /[^0-9.-]+/g, ""
         value = parseInt value
@@ -135,8 +135,10 @@ class Game
         else
             adjustedValue = value
 
-        if fuzzyMatchCheck
-            resp.reply "Fuzzy Match found"
+        if fuzzyMatchCheck.value? and not indexOfCheck
+            fuzzyMatchInfo = "Fuzzy Match found, fuzzy_min_match = #{FUZZY_MIN_MATCH}, distance = #{fuzzyMatchCheck.distance}, value = #{fuzzyMatchCheck.value}"
+            resp.reply fuzzyMatchInfo
+            @robot.logger.info fuzzyMatchInfo
 
         resp.reply "YOU ARE CORRECT!!! The answer is #{@currentQ.answer}, you scored #{adjustedValue} points."
 

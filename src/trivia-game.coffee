@@ -78,7 +78,8 @@ class Game
   @hintLength = null
 
   constructor: (@robot, @scoreKeeper) ->
-    buffer = Fs.readFileSync(Path.resolve('./res', 'questions.json'))
+    QUESTIONS_FILEPATH = __dirname + "../data/questions.json"
+    buffer = Fs.readFileSync(QUESTIONS_FILEPATH)
     @questions = JSON.parse buffer
     @robot.logger.debug "Initiated trivia game script."
   

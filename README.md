@@ -15,7 +15,6 @@ A trivia bot.
 * `npm install hubot-trivia-game --save`
 * edit `external-scripts.json` and add `hubot-trivia-game` to the JSON array.
 * if the file doesn't exist, create it with `["hubot-trivia-game"]`
-* add a `questions.json` file to `res/` folder which you may also need to create
 
 ### Question DB
 
@@ -28,4 +27,3 @@ The question database is a file containing a JSON array of questions with the fo
   "value": "$400"
 },
 ```
-Extract the `data/jeopardy_questions.json.gz` and store it in `<hubot_root>/res/questions.json` (Tip: You can also store a minor subset of Qs)

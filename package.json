@@ -3,7 +3,7 @@
   "description": "yet another trivia bot for Hubot",
   "version": "1.0.5",
   "author": "Michael Yin <mikeyin@mikeyin.org>",
-  "license": "MIT",
+  "license": "BSD-2-Clause",
 
   "keywords": [
     "hubot",
